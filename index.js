@@ -1,6 +1,8 @@
-import { PersonajesServices } from './PersonajesServices.js';
+import PersonajesServices from './PersonajesServices.js';
+import PeliculaServices from './PeliculaServices.js';
 import express from "express";
 import cors from "cors";
+import Pelicula from './PeliculaServices.js';
 
 const app = express();
 const port = 3000; 
@@ -10,7 +12,7 @@ app.use(express.json());
 
 
 app.get('/Personaje',async(req,res)=>{
-    const Personaje = await PizzaServices.getAll()
+    const Personaje = await PersonajesServices.getAll()
     res.status(200).send(Personaje)
 })
 
@@ -46,6 +48,15 @@ app.delete('/Personaje/:Id',async(req,res)=>{
         console.error(error);
         res.status(500).json({error:'Fallo el delete'});
     }
+})
+
+app.get('/characters',async(req,res)=>{
+    const Personaje = await PersonajesServices.listadoPersonaje()
+    res.status(200).send(Personaje)
+})
+app.get('/detallePersonaje',async(req,res)=>{
+    const Personaje = await PersonajesServices.detallePersonaje()
+    res.status(200).send(Personaje)
 })
 
 app.get('/Pelicula',async(req,res)=>{
@@ -87,6 +98,15 @@ app.delete('/Pelicula/:Id',async(req,res)=>{
         console.error(error);
         res.status(500).json({error:'Fallo el delete'});
     }
+})
+
+app.get('/movies',async(req,res)=>{
+    const Pelicula = await PeliculaServices.listadoPelicula()
+    res.status(200).send(Pelicula)
+})
+app.get('/detallePelicula/:Id',async(req,res)=>{
+    const Pelicula = await PeliculaServices.detallePelicula(req.params.Id)
+    res.status(200).send(Pelicula)
 })
 
 

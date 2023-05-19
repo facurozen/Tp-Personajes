@@ -1,7 +1,7 @@
 import {config} from './dbconfig.js';
 import sql from 'mssql';
 
-export class Pelicula{
+class Pelicula{
     static getAll = async () =>{
         let returnEntity = null;
         console.log('Estoy en: PeliculaServices.getAll()');
@@ -78,4 +78,32 @@ export class Pelicula{
         }
         return rowsAffected;
     }
+
+    static listadoPelicula = async () =>{
+        console.log('Estoy en: PeliculaSerivices.listadoPelicula()');
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .query('SELECT Id, Imagen, Titulo, FechaDeCreacion FROM Pelicula');
+            return result.recordsets[0];
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    static detallePelicula = async () =>{
+        console.log('Estoy en: PeliculaSerivices.detallePelicula()');
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pId", sql.Int, Id)
+                                    .query('SELECT * FROM Pelicula WHERE PXP.fkPersonaje = @pId INNER JOIN PersonajeXPelicula PXP on PXP.fkPelicula = Pelicula.Id INNER JOIN Personaje P on PXP.fkPersonaje = P.Id  ');
+            return result.recordsets[0];
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
 }
+export default Pelicula

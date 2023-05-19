@@ -1,7 +1,7 @@
 import {config} from './dbconfig.js';
 import sql from 'mssql';
 
-export class Personaje{
+class Personaje{
 
     static getAll = async () =>{
         console.log('Estoy en: PersonajesServices.getAll()');
@@ -81,4 +81,31 @@ export class Personaje{
         }
         return rowsAffected;
     }
+
+    static listadoPersonaje = async () =>{
+        console.log('Estoy en: PersonajesServices.listadoPersonaje()');
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .query('SELECT Imagen, Nombre, Id FROM Personaje');
+            return result.recordsets[0];
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    static detallePersonaje = async () =>{
+        console.log('Estoy en: PersonajesServices.detallePersonaje()');
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .query('SELECT * FROM Personaje INNER JOIN PersonajeXPelicula PXP on PXP.fkPersonaje = Personaje.Id  ');
+            return result.recordsets[0];
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
 }
+export default Personaje
