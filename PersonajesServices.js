@@ -107,5 +107,53 @@ class Personaje{
             console.log(error);
         }
     }
+
+    static getByNombre = async (Nombre) =>{
+        let returnEntity = null;
+        console.log('Estoy en: PersonajesServices.GetByNombre(Nombre)',Nombre);
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pNombre", sql.Int, Nombre)
+                                    .query('SELECT Nombre FROM Personaje WHERE Nombre = @pNombre');
+            returnEntity = result.recordsets[0][0];
+        }
+        catch(error){
+            console.log(error);
+        }
+        return returnEntity;
+    }
+
+    static getByEdad = async (Edad) =>{
+        let returnEntity = null;
+        console.log('Estoy en: PersonajesServices.GetByEdad(Edad)',Edad);
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pEdad", sql.Int, Edad)
+                                    .query('SELECT Edad FROM Personaje WHERE Edad = @pEdad');
+            returnEntity = result.recordsets[0][0];
+        }
+        catch(error){
+            console.log(error);
+        }
+        return returnEntity;
+    }
+
+    static getByPeliculaXPersonaje = async () =>{
+        let returnEntity = null;
+        console.log('Estoy en: PersonajesServices.getByPeliculaXPersonaje',Edad);
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pEdad", sql.Int, Edad)
+                                    .query('SELECT Edad FROM Personaje WHERE Edad = @pEdad');
+            returnEntity = result.recordsets[0][0];
+        }
+        catch(error){
+            console.log(error);
+        }
+        return returnEntity;
+    }
 }
 export default Personaje
