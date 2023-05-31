@@ -108,6 +108,14 @@ app.get('/detallePelicula/:Id',async(req,res)=>{
     const Pelicula = await PeliculaServices.detallePelicula(req.params.Id)
     res.status(200).send(Pelicula)
 })
+app.get('/getByNombreAsc/:Nombre',async(req,res)=>{
+    const Pelicula = await PeliculaServices.getByNombreAsc(req.params.Titulo)
+    res.status(200).send(Pelicula)
+})
+app.get('/getByNombreDesc/:Nombre',async(req,res)=>{
+    const Pelicula = await PeliculaServices.getByNombreDesc(req.params.Titulo)
+    res.status(200).send(Pelicula)
+})
 
 
 app.listen(port, () =>

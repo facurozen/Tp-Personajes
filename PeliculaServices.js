@@ -105,5 +105,35 @@ class Pelicula{
             console.log(error);
         }
     }
+    static getByNombreAsc = async (Titulo) =>{
+        let returnEntity = null;
+        console.log('Estoy en: PeliculaServices.GetByNombre(Nombre)',Titulo);
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pNombre", sql.Int, Titulo)
+                                    .query('SELECT Titulo FROM Pelicula WHERE Titulo like "@pNombre%" order by FechaDeCreacion ASC');
+            returnEntity = result.recordsets[0][0];
+        }
+        catch(error){
+            console.log(error);
+        }
+        return returnEntity;
+    }
+    static getByNombreDesc = async (Titulo) =>{
+        let returnEntity = null;
+        console.log('Estoy en: PeliculaServices.GetByNombre(Nombre)',Titulo);
+        try{
+            let pool = await sql.connect(config);
+            let result = await pool.request()
+                                    .input("pNombre", sql.Int, Titulo)
+                                    .query('SELECT Titulo FROM Pelicula WHERE Titulo like "@pNombre%" order by FechaDeCreacion DESC');
+            returnEntity = result.recordsets[0][0];
+        }
+        catch(error){
+            console.log(error);
+        }
+        return returnEntity;
+    }
 }
 export default Pelicula

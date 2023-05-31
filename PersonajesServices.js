@@ -140,20 +140,5 @@ class Personaje{
         return returnEntity;
     }
 
-    static getByPeliculaXPersonaje = async () =>{
-        let returnEntity = null;
-        console.log('Estoy en: PersonajesServices.getByPeliculaXPersonaje',Edad);
-        try{
-            let pool = await sql.connect(config);
-            let result = await pool.request()
-                                    .input("pEdad", sql.Int, Edad)
-                                    .query('SELECT Edad FROM Personaje WHERE Edad = @pEdad');
-            returnEntity = result.recordsets[0][0];
-        }
-        catch(error){
-            console.log(error);
-        }
-        return returnEntity;
-    }
 }
 export default Personaje
