@@ -100,7 +100,7 @@ class Personaje{
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-                                    .query('SELECT * FROM Personaje INNER JOIN PersonajeXPelicula PXP on PXP.fkPersonaje = Personaje.Id  ');
+                                    .query('SELECT Personaje.*,Pelicula.Titulo as PeliculaQueParticipa FROM Personaje INNER JOIN PersonajeXPelicula PXP on PXP.fkPersonaje = Personaje.Id inner join Pelicula on PXP.fkPelicula=Pelicula.Id ');
             return result.recordsets[0];
         }
         catch(error){
@@ -114,7 +114,7 @@ class Personaje{
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-                                    .input("pNombre", sql.Int, Nombre)
+                                    .input("pNombre", sql.VarChar, Nombre)
                                     .query('SELECT Nombre FROM Personaje WHERE Nombre = @pNombre');
             returnEntity = result.recordsets[0][0];
         }
@@ -131,7 +131,7 @@ class Personaje{
             let pool = await sql.connect(config);
             let result = await pool.request()
                                     .input("pEdad", sql.Int, Edad)
-                                    .query('SELECT Edad FROM Personaje WHERE Edad = @pEdad');
+                                    .query('SELECT Nombre FROM Personaje WHERE Edad = @pEdad');
             returnEntity = result.recordsets[0][0];
         }
         catch(error){

@@ -39,19 +39,19 @@ class Pelicula{
         .input('pTitulo',Titulo)
         .input('pFechaDeCreacion',FechaDeCreacion)
         .input('pCalificacion',Calificacion)
-        .query('INSERT INTO Personaje (Imagen, Titulo, FechaDeCreacion, Calificacion) VALUES (@pImagen,@pTitulo, @pFechaDeCreacion, @pCalificacion)')
+        .query('INSERT INTO Pelicula (Imagen, Titulo, FechaDeCreacion, Calificacion) VALUES (@pImagen,@pTitulo, @pFechaDeCreacion, @pCalificacion)')
     }
 
-    static update = async (Personaje) =>{
+    static update = async (Pelicula) =>{
         let rowsAffected = 0;
         const{Id,Imagen,Titulo,FechaDeCreacion,Calificacion} = Pelicula;
         console.log("name: " ,Titulo)
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-                                    .input('pId',Id)
+                                    .input("pId", sql.Int,Id)
                                     .input('pImagen',Imagen)
-                                    .input('pNombre',Titulo)
+                                    .input('pTitulo',Titulo)
                                     .input('pFechaDeCreacion',FechaDeCreacion)
                                     .input('pCalificacion',Calificacion)
                                     .query('UPDATE Pelicula set Imagen = @pImagen, Titulo = @pTitulo, FechaDeCreacion = @pFechaDeCreacion, Calificacion = @pCalificacion WHERE Id=@pId');
@@ -92,13 +92,13 @@ class Pelicula{
         }
     }
 
-    static detallePelicula = async () =>{
+    static detallePelicula = async (Id) =>{
         console.log('Estoy en: PeliculaSerivices.detallePelicula()');
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
                                     .input("pId", sql.Int, Id)
-                                    .query('SELECT * FROM Pelicula WHERE PXP.fkPersonaje = @pId INNER JOIN PersonajeXPelicula PXP on PXP.fkPelicula = Pelicula.Id INNER JOIN Personaje P on PXP.fkPersonaje = P.Id  ');
+                                    .query('SELECT Pelicula.*,P.Nombre as NombreDelActor FROM Pelicula INNER JOIN PersonajeXPelicula PXP on Pelicula.Id = PXP.fkPelicula INNER JOIN Personaje P on PXP.fkPersonaje = P.Id  WHERE PXP.fkPersonaje = @pId  ');
             return result.recordsets[0];
         }
         catch(error){
@@ -107,13 +107,14 @@ class Pelicula{
     }
     static getByNombreAsc = async (Titulo) =>{
         let returnEntity = null;
-        console.log('Estoy en: PeliculaServices.GetByNombre(Nombre)',Titulo);
+        console.log('Estoy en: PeliculaServices.GetByNombreASC(Nombre)',Titulo);
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-                                    .input("pNombre", sql.Int, Titulo)
-                                    .query('SELECT Titulo FROM Pelicula WHERE Titulo like "@pNombre%" order by FechaDeCreacion ASC');
+                                    .input("pNombre", sql.VarChar,Titulo)
+                                    .query("SELECT Titulo FROM Pelicula WHERE Titulo like '%'+@pNombre+'%' order by FechaDeCreacion ASC");
             returnEntity = result.recordsets[0][0];
+           
         }
         catch(error){
             console.log(error);
@@ -122,12 +123,12 @@ class Pelicula{
     }
     static getByNombreDesc = async (Titulo) =>{
         let returnEntity = null;
-        console.log('Estoy en: PeliculaServices.GetByNombre(Nombre)',Titulo);
+        console.log('Estoy en: PeliculaServices.GetByNombreDesc(Nombre)',Titulo);
         try{
             let pool = await sql.connect(config);
             let result = await pool.request()
-                                    .input("pNombre", sql.Int, Titulo)
-                                    .query('SELECT Titulo FROM Pelicula WHERE Titulo like "@pNombre%" order by FechaDeCreacion DESC');
+                                    .input("pNombre", sql.VarChar, Titulo)
+                                    .query("SELECT Titulo FROM Pelicula WHERE Titulo like '%'+@pNombre+'%' order by FechaDeCreacion DESC");
             returnEntity = result.recordsets[0][0];
         }
         catch(error){

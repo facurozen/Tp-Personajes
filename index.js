@@ -59,6 +59,15 @@ app.get('/detallePersonaje',async(req,res)=>{
     res.status(200).send(Personaje)
 })
 
+app.get('/characters/:Nombre',async(req,res)=>{
+    const Personaje = await PersonajesServices.getByNombre(req.params.Nombre);
+    res.status(200).send(Personaje)
+})
+app.get('/characters/:Edad',async(req,res)=>{
+    const Personaje = await PersonajesServices.getByEdad(req.params.Edad);
+    res.status(200).send(Personaje)
+})
+
 app.get('/Pelicula',async(req,res)=>{
     const Pelicula = await PeliculaServices.getAll()
     res.status(200).send(Pelicula)
@@ -81,7 +90,7 @@ app.post('/Pelicula',async(req,res)=>{
 
 app.put('/Pelicula',async(req,res)=>{
     try{
-        await PeliculaServices.update(req.body)
+        await PeliculaServices.update(req.body.pelicula)
         res.status(200).json({message:'Pelicula actualizada'});
     }   catch (error){
         console.error(error);
@@ -108,11 +117,12 @@ app.get('/detallePelicula/:Id',async(req,res)=>{
     const Pelicula = await PeliculaServices.detallePelicula(req.params.Id)
     res.status(200).send(Pelicula)
 })
-app.get('/getByNombreAsc/:Nombre',async(req,res)=>{
+app.get('/getByNombreAsc/:Titulo',async(req,res)=>{
     const Pelicula = await PeliculaServices.getByNombreAsc(req.params.Titulo)
     res.status(200).send(Pelicula)
+    
 })
-app.get('/getByNombreDesc/:Nombre',async(req,res)=>{
+app.get('/getByNombreDesc/:Titulo',async(req,res)=>{
     const Pelicula = await PeliculaServices.getByNombreDesc(req.params.Titulo)
     res.status(200).send(Pelicula)
 })
